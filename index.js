@@ -1,38 +1,72 @@
+// requirements
 const express = require('express');
-const { MongoClient } = require('mongodb');
-const constants = require('./ConnectionConstants.js');
+const bodyParser = require('body-parser');
 const app = express();
-app.use(express.static("public"))
+const mongoose = require('mongoose');
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-const uri = constants.uri;
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+app.use(express.static(__dirname + '/public')) // this will use the index.html as the default page for now. We will move this to the frontend after testing.
 
-app.get('/', (req, res) => {
-  res.redirect('/home')
-});
+// MongoDB info
+const uri = "mongodb+srv://brianfeddes:NetflixPassword@netflixdatabase.m4ijrna.mongodb.net/NetflixDatabase?retryWrites=true&w=majority"	
+const collectionName = "NetflixCollection"
 
-app.get('/home',(req, res) => {
-  res.sendFile(__dirname + '/index.html')
-});
+// connecting 
+const port = process.env.PORT || 3000 // port number
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Server started on port ${port}`);
+    });
+  })
+  .catch((err) => console.error(err));
 
-app.get('/home/api/data/netflix', async (req, res) => {
-  try {
-    await client.connect();
-    const collection = client.db(constants.databaseName).collection(constants.collectionName);
-    const data = await collection.find({}).toArray();
-    res.json(data);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
-  } finally {
-    await client.close();
-  }
-});
-
-
-
-const port = process.env.PORT || 3000
-
-app.listen(port, function() {
-	console.log(`Server is running at ${port}`)
+// Defining the schema 
+const mediaSchema = new mongoose.Schema ({
+    type: { type: String, required: true },
+    title: { type: String, required: true }, 
+    director: { type: String, required: true }, 
+    country: { type: String, required: true }, 
+    date_added: { type: String, required: true }, 
+    release_year: { type: String, required: true }, 
+    rating: { type: String, required: true }, 
+    duration: { type: String, required: true }, 
+    listed_in: { type: String, required: true }, 
+    description: { type: String, required: true }
 })
+
+const Media = mongoose.model('Media', mediaSchema, collectionName);
+
+// create media route
+app.post('/create', async (req, res) => {
+    try {
+      const { type, title, director, country, date_added, release_year, rating, duration, listed_in, description } = req.body;
+      const movie = new Media({ 
+        type, 
+        title, 
+        director, 
+        country, 
+        date_added, 
+        release_year, 
+        rating, 
+        duration, 
+        listed_in, 
+        description });
+      await movie.save();
+      res.status(201).json({ message: 'Movie added successfully' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
+  // reading the movies
+  app.get('/all', async (req, res) => {
+    try {
+      const movies = await Media.find();
+      res.status(200).json(movies);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
