@@ -2,7 +2,7 @@
 // MongoDB Cluster Password: NetflixPassword
 
 
-const uri = "mongodb+srv://brianfeddes:NetflixPassword@netflixdatabase.m4ijrna.mongodb.net/NetflixDatabase"	
+const uri = "mongodb+srv://brianfeddes:NetflixPassword@netflixdatabase.m4ijrna.mongodb.net/NetflixDatabase?retryWrites=true&w=majority"		
 
 const databaseName = "NetflixDatabase"
 const collectionName = "NetflixCollection"
