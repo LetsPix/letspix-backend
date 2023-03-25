@@ -3,14 +3,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const mongoose = require('mongoose');
+const constants = require('./ConnectionConstants')
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(express.static(__dirname + '/public')) // this will use the index.html as the default page for now. We will move this to the frontend after testing.
+app.use(express.static(__dirname + '/public')); // this will use the index.html as the default page for now. We will move this to the frontend after testing.
 
 // MongoDB info
-const uri = "mongodb+srv://brianfeddes:NetflixPassword@netflixdatabase.m4ijrna.mongodb.net/NetflixDatabase?retryWrites=true&w=majority"	
-const collectionName = "NetflixCollection"
+const uri = constants.uri;
+const collectionName = constants.collectionName;
 
 // connecting 
 const port = process.env.PORT || 3000 // port number
@@ -33,40 +34,57 @@ const mediaSchema = new mongoose.Schema ({
     rating: { type: String, required: true }, 
     duration: { type: String, required: true }, 
     listed_in: { type: String, required: true }, 
-    description: { type: String, required: true }
-})
+    description: { type: String, required: true },
+    service: {type: String, required: true}
+});
 
 const Media = mongoose.model('Media', mediaSchema, collectionName);
 
-// create media route
+// create media
 app.post('/create', async (req, res) => {
     try {
-      const { type, title, director, country, date_added, release_year, rating, duration, listed_in, description } = req.body;
-      const movie = new Media({ 
-        type, 
-        title, 
-        director, 
-        country, 
-        date_added, 
-        release_year, 
-        rating, 
-        duration, 
-        listed_in, 
-        description });
-      await movie.save();
-      res.status(201).json({ message: 'Movie added successfully' });
+        const { type, title, director, country, date_added, release_year, rating, duration, listed_in, description, service } = req.body;
+
+        // this creates the new media
+        const media = new Media({ 
+            type, 
+            title, 
+            director, 
+            country, 
+            date_added, 
+            release_year, 
+            rating, 
+            duration, 
+            listed_in, 
+            description,
+            service
+        });
+        await media.save();
+        res.status(201).json({ message: `\"${title}\" added successfully` });
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Server error' });
+        console.error(err);
+        res.status(500).json({ error: 'Your media could not be added.' });
     }
-  });
-  // reading the movies
-  app.get('/all', async (req, res) => {
+});
+
+// reading the media
+app.get('/all', async (req, res) => {
     try {
-      const movies = await Media.find();
-      res.status(200).json(movies);
+        const media = await Media.find();
+        res.status(200).json(media);
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Server error' });
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
     }
-  });
+});
+
+// reading the media
+app.get('/allNetflix', async (req, res) => {
+    try {
+        const media = await Media.find({});
+        res.status(200).json(media);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
