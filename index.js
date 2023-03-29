@@ -8,7 +8,6 @@ const cors = require('cors');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.static(__dirname + '/public')); // this will use the index.html as the default page for now. We will move this to the frontend after testing.
 
 // MongoDB info
 const uri = constants.uri;
@@ -42,7 +41,14 @@ const mediaSchema = new mongoose.Schema ({
 
 const Media = mongoose.model('Media', mediaSchema, collectionName);
 
-// create media
+// Just getting the home page if someone wants to go to the server site for whatever reason 
+app.get('/', (req, res) => {
+    res.sendFile( __dirname + '/public/index.html');
+});
+
+/* CRUD operations below */
+
+// create media **CREATE**
 app.post('/create', async (req, res) => {
     try {
         const { type, title, director, cast, country, date_added, release_year, rating, duration, listed_in, description, service } = req.body;
@@ -70,7 +76,7 @@ app.post('/create', async (req, res) => {
     }
 });
 
-// reading the media
+// reading all the media pretaining to Netflix **READ**
 app.get('/all/Netflix', async (req, res) => {
     try {
         const media = await Media.find();
@@ -80,3 +86,5 @@ app.get('/all/Netflix', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
+// Finding a specific media **READ**
