@@ -99,3 +99,8 @@ app.post('/api/findtitle', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
+// reading all the media pretaining to Netflix **READ**
+app.get('/ping', async (req, res) => {
+    res.status(200).json({ message: 'Server pinged'});
+});
