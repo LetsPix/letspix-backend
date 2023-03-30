@@ -51,7 +51,7 @@ app.get('/', (req, res) => {
 // create media **CREATE**
 app.post('/create', async (req, res) => {
     try {
-        const { type, title, director, cast, country, date_added, release_year, rating, duration, listed_in, description, service } = req.body;
+        const { type, title, cast, director, country, date_added, release_year, rating, duration, listed_in, description, service } = req.body;
 
         // this creates the new media
         const media = new Media({ 
@@ -77,7 +77,8 @@ app.post('/create', async (req, res) => {
 });
 
 // reading all the media pretaining to Netflix **READ**
-app.get('/all/Netflix', async (req, res) => {
+app.get('/api/all', async (req, res) => {
+
     try {
         const media = await Media.find();
         res.status(200).json(media);
@@ -88,3 +89,13 @@ app.get('/all/Netflix', async (req, res) => {
 });
 
 // Finding a specific media **READ**
+app.post('/api/findtitle', async (req, res) => {
+    const userTitle = req.body.title;
+    try {
+        const mediaTitle = await Media.findOne({ title: userTitle});
+        res.status(200).json(mediaTitle);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
