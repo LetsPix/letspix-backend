@@ -88,6 +88,19 @@ app.get('/api/all', async (req, res) => {
     }
 });
 
+// reading all the media pretaining to Netflix ---> endpoint /api/netflix/all - JB
+app.get('/api/netflix/all', async (req, res) => {
+    
+    try {
+        const media = await Media.find({service: 'Netflix'}); // Added Netflix service
+        res.status(200).json(media);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
 // Finding a specific media **READ**
 app.post('/api/findtitle', async (req, res) => {
     const userTitle = req.body.title;
