@@ -2,9 +2,13 @@
 // MongoDB Cluster Password: NetflixPassword
 
 
-const uri = "mongodb+srv://brianfeddes:NetflixPassword@netflixdatabase.m4ijrna.mongodb.net/NetflixDatabase?retryWrites=true&w=majority"		
+const uri = "mongodb+srv://brianfeddes:NetflixPassword@netflixdatabase.m4ijrna.mongodb.net/MediaDatabase?retryWrites=true&w=majority"		
 
 const databaseName = "NetflixDatabase"
-const collectionName = "NetflixCollection"
+const allMediaCollectionName = "AllMediaCollection"
+const amazonCollectionName = "AmazonCollection"
+const disneyCollectionName = "DisneyCollection"
+const huluCollectionName = "HuluCollection"
+const netflixCollectionName = "NetflixCollection"
 
-module.exports = { uri, databaseName, collectionName };
+module.exports = { uri, databaseName, allMediaCollectionName, amazonCollectionName, disneyCollectionName, huluCollectionName, netflixCollectionName };
