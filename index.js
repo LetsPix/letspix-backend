@@ -12,11 +12,6 @@ app.use(cors());
 // MongoDB info
 const uri = constants.uri;
 const allMediaCollectionName = constants.allMediaCollectionName;
-const amazonCollectionName = constants.amazonCollectionName;
-const disneyCollectionName = constants.disneyCollectionName;
-const huluCollectionName = constants.huluCollectionName;
-const netflixCollectionName = constants.netflixCollectionName;
-
 
 // starting up the server using mongoose
 const port = process.env.PORT || 3000 // port number
@@ -98,6 +93,43 @@ app.get('/api/netflix/all', async (req, res) => {
     
     try {
         const media = await Media.find({service: 'Netflix'}); // Added Netflix service
+        res.status(200).json(media);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// reading all the media pretaining to Hulu
+app.get('/api/hulu/all', async (req, res) => {
+    
+    try {
+        const media = await Media.find({service: 'Hulu'}); // Added Netflix service
+        res.status(200).json(media);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// reading all the media pretaining to Amazon Prime
+app.get('/api/amazon/all', async (req, res) => {
+    
+    try {
+        const media = await Media.find({service: 'Amazon Prime'}); // Added Netflix service
+        res.status(200).json(media);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
+// reading all the media pretaining to Disney+
+app.get('/api/disney/all', async (req, res) => {
+    
+    try {
+        const media = await Media.find({service: 'Disney+'}); // Added Netflix service
         res.status(200).json(media);
     } catch (err) {
         console.error(err);
