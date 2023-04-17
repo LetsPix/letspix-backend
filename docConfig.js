@@ -5,15 +5,15 @@
 const MongoClient = require('mongodb').MongoClient;
 
 // Replace the uri string with your MongoDB deployment's connection string.
-const uri = "mongodb+srv://brianfeddes:NetflixPassword@netflixdatabase.m4ijrna.mongodb.net/NetflixDatabase?retryWrites=true&w=majority";
+const uri = "mongodb+srv://brianfeddes:NetflixPassword@netflixdatabase.m4ijrna.mongodb.net/MediaDatabase";
 
 const client = new MongoClient(uri);
 
 // THIS FUNCTION DELETES SPECIFIC DOCUMENTS
 async function deleteDocs() {
     try {
-        const database = client.db("NetflixDatabase");
-        const movies = database.collection("NetflixCollection");
+        const database = client.db("MediaDatabase");
+        const movies = database.collection("AmazonCollection");
 
         // this filter will specify which documents to delete
         const filter = { FIELD: 'FIELD FILTER'};
@@ -57,8 +57,8 @@ async function deleteField() {
 // THIS FUNCTION UPDATES ALL DOCUMENTS BY ADDING A NEW FIELD 
 async function addField() {
     try {
-        const database = client.db("NetflixDatabase");
-        const movies = database.collection("NetflixCollection");
+        const database = client.db("MediaDatabase");
+        const movies = database.collection("DisneyCollection");
 
         // creates the filter. In this case its empty so it applies to all documents
         const filter = {};
@@ -66,7 +66,7 @@ async function addField() {
         // Created the new field for each document
         const updateDoc = {
             $set: {
-            service: 'Netflix'
+            service: 'Disney+'
         },
         };
         const result = await movies.updateMany(filter, updateDoc);
@@ -77,4 +77,4 @@ async function addField() {
         await client.close();
     }
 }
-// addField().catch(console.dir); // Commented out so it doesn't execute
+addField().catch(console.dir); // Commented out so it doesn't execute

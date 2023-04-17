@@ -11,7 +11,12 @@ app.use(cors());
 
 // MongoDB info
 const uri = constants.uri;
-const collectionName = constants.collectionName;
+const allMediaCollectionName = constants.allMediaCollectionName;
+const amazonCollectionName = constants.amazonCollectionName;
+const disneyCollectionName = constants.disneyCollectionName;
+const huluCollectionName = constants.huluCollectionName;
+const netflixCollectionName = constants.netflixCollectionName;
+
 
 // starting up the server using mongoose
 const port = process.env.PORT || 3000 // port number
@@ -39,7 +44,7 @@ const mediaSchema = new mongoose.Schema ({
     service: {type: String, required: true}
 });
 
-const Media = mongoose.model('Media', mediaSchema, collectionName);
+const Media = mongoose.model('Media', mediaSchema, allMediaCollectionName);
 
 // Just getting the home page if someone wants to go to the server site for whatever reason 
 app.get('/', (req, res) => {
@@ -76,7 +81,7 @@ app.post('/create', async (req, res) => {
     }
 });
 
-// reading all the media pretaining to Netflix **READ**
+// reading all the media
 app.get('/api/all', async (req, res) => {
 
     try {
