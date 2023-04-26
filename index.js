@@ -150,7 +150,8 @@ app.post('/api/findtitle', async (req, res) => {
     }
 });
 
-// reading all the media pretaining to Netflix **READ**
-app.get('/ping', async (req, res) => {
-    res.status(200).json({ message: 'Server pinged'});
-});
+// Implement a ping
+app.get('/ping', (request, response) => {
+	console.log('Established connection between Client and Server...')
+	response.send()
+})
