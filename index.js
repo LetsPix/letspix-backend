@@ -152,6 +152,5 @@ app.post('/api/findtitle', async (req, res) => {
 
 // Implement a ping
 app.get('/ping', (request, response) => {
-	console.log('Established connection between Client and Server...')
-	response.send()
+	console.log('Established connection between Client and Server...');
 })
